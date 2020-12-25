@@ -1,4 +1,4 @@
-package view;
+package view.customer;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,7 +23,7 @@ public class LoginView extends View{
 	JScrollPane sp;
 	JLabel passLbl, passValue, nameLbl, nameValue;
 	JTextField nameTxt, passTxt;
-	JButton login;
+	JButton login, register;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
 
@@ -47,6 +47,7 @@ public class LoginView extends View{
 		
 		
 		login = new JButton("Login");
+		register = new JButton("Register");
 	}
 
 	@Override
@@ -58,6 +59,7 @@ public class LoginView extends View{
 		mid.add(passTxt);
 		
 		bot.add(login);
+		bot.add(register);
 	
 		
 		add(top, BorderLayout.NORTH);

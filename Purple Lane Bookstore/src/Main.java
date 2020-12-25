@@ -1,6 +1,8 @@
 import connect.Connect;
 import core.view.View;
-import view.LoginView;
+import view.customer.LoginView;
+import view.customer.ProductPage;
+import view.customer.RegisterView;
 
 public class Main {
 	
@@ -8,7 +10,9 @@ public class Main {
 	public Main() {
 		new Connect();
 		
-		new LoginView().showForm();
+//		new LoginView().showForm();
+//		new RegisterView().showForm();
+		new ProductPage().showForm();
 		
 		
 	}
