@@ -1,8 +1,16 @@
+import connect.Connect;
+import core.view.View;
+import view.LoginView;
 
 public class Main {
-
+	
+	
 	public Main() {
-		// TODO Auto-generated constructor stub
+		new Connect();
+		
+		new LoginView().showForm();
+		
+		
 	}
 
 	public static void main(String[] args) {

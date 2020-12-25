@@ -1,3 +1,4 @@
+package connect;
 
 import java.sql.*;
 public final class Connect {
