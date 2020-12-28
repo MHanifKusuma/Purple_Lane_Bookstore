@@ -1,4 +1,4 @@
-package view.customer;
+package view.admin;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -23,9 +23,9 @@ public class ProductPage extends View {
 	JPanel top, mid, bot;
 	JTable table;
 	JScrollPane sp;
-	JLabel searchLbl;
-	JTextField searchTxt;
-	JButton search, addToCart, viewCart;
+	JLabel idLbl, idValue, nameLbl, priceLbl, searchLbl;
+	JTextField nameTxt, priceTxt, searchTxt;
+	JButton insert, update, delete, search;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
 
@@ -42,18 +42,24 @@ public class ProductPage extends View {
 		bot = new JPanel();
 		table = new JTable();
 		sp = new JScrollPane(table);
+		idLbl = new JLabel("Product ID: ");
+		nameLbl = new JLabel("Product Name: ");
+		priceLbl = new JLabel("Product Price: ");
+		idValue = new JLabel("-");
+		nameTxt = new JTextField();
+		priceTxt = new JTextField();
 		
 		searchLbl = new JLabel("Search Product ID: ");
 		searchTxt = new JTextField();
 		
+		insert = new JButton("Insert");
+		update = new JButton("Update");
+		delete = new JButton("Delete");	
 		search = new JButton("Search");
-		addToCart = new JButton("Add to cart");
 		
-		viewCart = new JButton("View cart");
+		sp.setPreferredSize(new Dimension(550, 300));
+		searchTxt.setPreferredSize(new Dimension(200, 30));
 		
-		searchTxt.setPreferredSize(new Dimension(100, 30));
-		
-		sp.setPreferredSize(new Dimension(550, 600));
 	}
 
 	@Override
@@ -65,11 +71,24 @@ public class ProductPage extends View {
 		top.add(searchLbl);
 		top.add(searchTxt);
 		top.add(search);
-		top.add(addToCart);
-		top.add(viewCart);
 		top.add(sp);
 		
-		add(top, BorderLayout.CENTER);
+		mid.add(idLbl);
+		mid.add(idValue);
+		mid.add(nameLbl);
+		mid.add(nameTxt);
+		mid.add(priceLbl);
+		mid.add(priceTxt);
+		
+		bot.add(insert);
+		bot.add(update);
+		bot.add(delete);
+	
+		
+		add(top, BorderLayout.NORTH);
+		add(mid, BorderLayout.CENTER);
+		add(bot, BorderLayout.SOUTH);
+
 	}
 
 	@Override
