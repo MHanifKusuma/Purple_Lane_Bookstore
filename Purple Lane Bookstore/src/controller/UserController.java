@@ -86,23 +86,31 @@ public class UserController extends Controller{
 		
 		ResultSet checkUser = user.checkUser(username);
 		
+//		try {
+//			
+//		} catch (SQLException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		
 		try {
 			if(checkUser.next()) {
 				if(!checkUser.getString("Password").equals(password)) {
 					return error = 401; //error jika password yang dimasukkan salah
 				}
-				
-				if(checkUser.getInt("RoleId") == 1) {
-					return role = 201; //role untuk member
-				}
-				else if (checkUser.getInt("RoleId") == 2) {
-					return role = 202; //role untuk admin
-				}
-				else if (checkUser.getInt("RoleId") == 3) {
-					return role = 203; //role untuk promotion
-				}
-				else if (checkUser.getInt("RoleId") == 4) {
-					return role = 204; // role untuk manager
+				else {
+					if(checkUser.getInt("RoleId") == 1) {
+						return role = 201; //role untuk member
+					}
+					else if (checkUser.getInt("RoleId") == 2) {
+						return role = 202; //role untuk admin
+					}
+					else if (checkUser.getInt("RoleId") == 3) {
+						return role = 203; //role untuk promotion
+					}
+					else if (checkUser.getInt("RoleId") == 4) {
+						return role = 204; // role untuk manager
+					}
 				}
 			}
 			else
@@ -116,6 +124,24 @@ public class UserController extends Controller{
 		
 		
 		return error;
+	}
+	
+	public UserModel setLoggedInUser(String username) {
+		UserModel user =  new UserModel();
+		ResultSet checkUser = user.checkUser(username);
+		
+		try {
+			if(checkUser.next()) {
+				user.setUserId(checkUser.getInt("UserId"));
+				user.setUsername(checkUser.getString("Username"));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return user;
 	}
 
 	@Override

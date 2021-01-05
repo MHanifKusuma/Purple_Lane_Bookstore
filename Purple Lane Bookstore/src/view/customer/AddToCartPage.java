@@ -15,6 +15,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import core.view.View;
+import model.UserModel;
 
 public class AddToCartPage extends View{
 	
@@ -26,11 +27,15 @@ public class AddToCartPage extends View{
 	JButton search, addToCart;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
+	UserModel user;
 
-	public AddToCartPage() {
+	public AddToCartPage(UserModel user) {
 		super();
 		this.height = 700;
 		this.width = 600;
+		this.user = user;
+		
+		System.out.println(user.getUserId());
 	}
 
 	@Override

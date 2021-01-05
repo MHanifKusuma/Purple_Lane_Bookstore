@@ -1,73 +1,242 @@
 package view.promotion;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
+import connect.Connect;
+import controller.AdminController;
+import core.model.Model;
 import core.view.View;
+import model.AdminModel;
 
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Vector;
 
 public class PromoPage extends View {
 
-	private JPanel contentPane;
+	JPanel top, top2, mid, bot;
+	JTable table;
+	JScrollPane sp;
+	JLabel idLbl, idValue, nameLbl, authorLbl, priceLbl, stockLbl, searchLbl;
+	JTextField nameTxt, authorTxt, priceTxt, stockTxt, searchTxt;
+	JButton insert, update, delete, search;
+	Vector<Vector<String>> data;
+	Vector<String> detail, header;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PromoPage frame = new PromoPage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public PromoPage() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 519, 371);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
-		
-		JPanel panel = new JPanel();
-		contentPane.add(panel);
-		panel.setLayout(new GridLayout(1, 0, 0, 0));
+		super();
+		this.height = 800;
+		this.width = 700;
 	}
 
 	@Override
 	public void initialize() {
-		// TODO Auto-generated method stub
+		top = new JPanel();
+		top2 = new JPanel();
+		mid = new JPanel(new GridLayout(5,2));
+		bot = new JPanel();
+		table = new JTable();
+		sp = new JScrollPane(table);
+		idLbl = new JLabel("Product ID: ");
+		nameLbl = new JLabel("Product Name: ");
+		authorLbl = new JLabel("Product Author:");
+		priceLbl = new JLabel("Product Price: ");
+		stockLbl = new JLabel("Product Stock:");
+		idValue = new JLabel("-");
+		nameTxt = new JTextField();
+		authorTxt = new JTextField();
+		priceTxt = new JTextField();
+		stockTxt = new JTextField();
+		
+		searchLbl = new JLabel("Search Product ID: ");
+		searchTxt = new JTextField();
+		
+		insert = new JButton("Insert") ;
+		update = new JButton("Update");
+		delete = new JButton("Delete");	
+		search = new JButton("Search");
+		
+		sp.setPreferredSize(new Dimension(550, 300));
+		searchTxt.setPreferredSize(new Dimension(200, 30));
 		
 	}
 
 	@Override
 	public void addComponent() {
-		// TODO Auto-generated method stub
+		Connect con = new Connect();
+		
+		//	loadData(con.executeQuery("SELECT * FROM products"));
+			
+			top.add(searchLbl);
+			top.add(searchTxt);
+			top.add(search);
+			top.add(sp);
+			
+			mid.add(idLbl);
+			mid.add(idValue);
+			mid.add(nameLbl);
+			mid.add(nameTxt);
+			mid.add(authorLbl);
+			mid.add(authorTxt);
+			mid.add(priceLbl);
+			mid.add(priceTxt);
+			mid.add(stockLbl);
+			mid.add(stockTxt);
+			
+			bot.add(insert);
+			bot.add(update);
+			bot.add(delete);
+		
+			
+			add(top, BorderLayout.NORTH);
+			add(mid, BorderLayout.CENTER);
+			add(bot, BorderLayout.SOUTH);
+			
+			loadData();
 		
 	}
 
 	@Override
 	public void addListener() {
 		// TODO Auto-generated method stub
+				insert.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						String ProductName = nameTxt.getText();
+						String ProductAuthor = authorTxt.getText();
+						Integer ProductPrice = Integer.parseInt(priceTxt.getText());
+						Integer ProductStock = Integer.parseInt(stockTxt.getText());
+						AdminController.getInstance().insert(ProductName, ProductAuthor, ProductPrice, ProductStock);
+						loadData();
+					}
+				});
+				
+				table.addMouseListener(new MouseListener() {
+					
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void mousePressed(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void mouseExited(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						// TODO Auto-generated method stub
+						int row = table.getSelectedRow();
+						idValue.setText(table.getValueAt(row, 0).toString());
+						nameTxt.setText(table.getValueAt(row, 1).toString());
+						authorTxt.setText(table.getValueAt(row, 2).toString());
+						priceTxt.setText(table.getValueAt(row, 3).toString());
+						stockTxt.setText(table.getValueAt(row, 4).toString());
+					}
+				});
+				
+				update.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						Integer ProductId = Integer.parseInt(idValue.getText());
+						String ProductName = nameTxt.getText();
+						String ProductAuthor = authorTxt.getText();
+						Integer ProductPrice = Integer.parseInt(priceTxt.getText());
+						Integer ProductStock = Integer.parseInt(stockTxt.getText());
+						AdminController.getInstance().update(ProductName, ProductAuthor, ProductPrice, ProductStock, ProductId);
+						loadData();
+					}
+				});
+				
+				delete.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						Integer ProductId = Integer.parseInt(idValue.getText());
+						
+						AdminController.getInstance().delete(ProductId);
+						loadData();
+					}
+				});
 		
+	}
+	
+	private void loadData() {
+		header = new Vector<>();
+		data = new Vector<>();
+		
+		header.add("Product ID");
+		header.add("Product Name");
+		header.add("Product Author");
+		header.add("Product Price");
+		header.add("Product Stock");
+		
+		
+		Vector<Model> productList = AdminController.getInstance().getAll();
+		
+		for (Model model : productList) {
+			AdminModel p = (AdminModel) model;
+			detail = new Vector<>();
+			detail.add(p.getProductId().toString());
+			detail.add(p.getProductName());
+			detail.add(p.getProductAuthor());
+			detail.add(p.getProductPrice().toString());
+			detail.add(p.getStock().toString());
+			
+			data.add(detail);
+		}
+		
+		DefaultTableModel dtm = new DefaultTableModel(data, header) {
+			
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		};
+		
+		
+		table.setModel(dtm);
 	}
 
 }

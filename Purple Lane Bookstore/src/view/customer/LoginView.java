@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 
 import controller.UserController;
 import core.view.View;
+import model.UserModel;
 import view.manager.HireStaffPage;
 
 public class LoginView extends View{
@@ -96,7 +97,9 @@ public class LoginView extends View{
 					JOptionPane.showMessageDialog(null, "User not found!");
 				}
 				else if (AttemptLogin == 201) {
-					new ProductPage().showForm();
+					UserModel user = UserController.getInstance().setLoggedInUser(name);
+					
+					new ProductPage(user).showForm();
 				}
 				else if (AttemptLogin == 202) {
 					new view.admin.AdminPage().showForm();

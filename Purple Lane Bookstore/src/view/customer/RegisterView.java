@@ -100,7 +100,7 @@ public class RegisterView extends View{
 				}
 				else {
 					UserController.getInstance().insert(roleId, name, pass);
-					new ProductPage().showForm();
+					new LoginView().showForm();
 				}
 				
 				

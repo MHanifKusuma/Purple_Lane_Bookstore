@@ -11,6 +11,15 @@ public class UserModel extends Model{
 	
 	private int roleId;
 	private String username, password;
+	private int userId;
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
 	public UserModel() {
 		// TODO Auto-generated constructor stub

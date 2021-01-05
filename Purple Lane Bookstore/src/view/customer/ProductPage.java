@@ -3,6 +3,8 @@ package view.customer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -17,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import connect.Connect;
 import core.view.View;
+import model.UserModel;
 
 public class ProductPage extends View {
 	
@@ -28,11 +31,15 @@ public class ProductPage extends View {
 	JButton search, addToCart, viewCart;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
+	UserModel user;
 
-	public ProductPage() {
+	public ProductPage(UserModel user) {
 		super();
 		this.height = 700;
 		this.width = 600;
+		this.user = user;
+		
+		System.out.println(user.getUserId());
 	}
 
 	@Override
@@ -74,7 +81,14 @@ public class ProductPage extends View {
 
 	@Override
 	public void addListener() {
-		// TODO Auto-generated method stub
+		addToCart.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new AddToCartPage(user).showForm();;
+				
+			}
+		});
 
 	}
 	
