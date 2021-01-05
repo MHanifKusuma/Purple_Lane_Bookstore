@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -18,7 +20,11 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import connect.Connect;
+import controller.AddToCartController;
+import controller.AdminController;
+import core.model.Model;
 import core.view.View;
+import model.AdminModel;
 import model.UserModel;
 
 public class ProductPage extends View {
@@ -26,8 +32,8 @@ public class ProductPage extends View {
 	JPanel top, mid, bot;
 	JTable table;
 	JScrollPane sp;
-	JLabel searchLbl;
-	JTextField searchTxt;
+	JLabel searchLbl, idLbl, nameLbl, quantityLbl, idValue, nameValue;
+	JTextField searchTxt, quantityTxt;
 	JButton search, addToCart, viewCart;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
@@ -35,7 +41,7 @@ public class ProductPage extends View {
 
 	public ProductPage(UserModel user) {
 		super();
-		this.height = 700;
+		this.height = 600;
 		this.width = 600;
 		this.user = user;
 		
@@ -49,34 +55,45 @@ public class ProductPage extends View {
 		bot = new JPanel();
 		table = new JTable();
 		sp = new JScrollPane(table);
-		
+		idLbl = new JLabel("Product ID: ");
+		nameLbl = new JLabel("Product Name: ");
+		quantityLbl = new JLabel("Product Quantity: ");
+		quantityTxt = new JTextField();
 		searchLbl = new JLabel("Search Product ID: ");
 		searchTxt = new JTextField();
-		
+		idValue = new JLabel("-");
+		nameValue = new JLabel("-");
 		search = new JButton("Search");
 		addToCart = new JButton("Add to cart");
-		
 		viewCart = new JButton("View cart");
-		
-		searchTxt.setPreferredSize(new Dimension(100, 30));
-		
-		sp.setPreferredSize(new Dimension(550, 600));
+		sp.setPreferredSize(new Dimension(550, 300));
+		searchTxt.setPreferredSize(new Dimension(200, 30));
 	}
 
 	@Override
 	public void addComponent() {
 		Connect con = new Connect();
 		
-		loadData(con.executeQuery("SELECT * FROM products"));
+		loadData();
 		
 		top.add(searchLbl);
 		top.add(searchTxt);
 		top.add(search);
-		top.add(addToCart);
 		top.add(viewCart);
 		top.add(sp);
 		
-		add(top, BorderLayout.CENTER);
+		mid.add(idLbl);
+		mid.add(idValue);
+		mid.add(nameLbl);
+		mid.add(nameValue);
+		mid.add(quantityLbl);
+		mid.add(quantityTxt);
+		
+		bot.add(addToCart);	
+		
+		add(top, BorderLayout.NORTH);
+		add(mid, BorderLayout.CENTER);
+		add(bot, BorderLayout.SOUTH);
 	}
 
 	@Override
@@ -84,15 +101,54 @@ public class ProductPage extends View {
 		addToCart.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new AddToCartPage(user).showForm();;
-				
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				UserModel um = new UserModel();
+				AddToCartController cont = new AddToCartController();
+				Integer ProductId = Integer.parseInt(idValue.getText());
+				Integer ProductQty = Integer.parseInt(quantityTxt.getText());
+				AddToCartController.getInstance().insert(user, ProductId, ProductQty);
+				loadData();
 			}
 		});
-
+		
+		table.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				int row = table.getSelectedRow();
+				idValue.setText(table.getValueAt(row, 0).toString());
+				nameValue.setText(table.getValueAt(row, 1).toString());
+			}
+		});
 	}
 	
-	private void loadData(ResultSet rs) {
+	private void loadData() {
 		header = new Vector<>();
 		data = new Vector<>();
 		
@@ -102,30 +158,57 @@ public class ProductPage extends View {
 		header.add("Product Price");
 		header.add("Product Stock");
 		
-		try {
-			while(rs.next()) {
-				Integer id = rs.getInt("ProductId");
-				String name = rs.getString("ProductName");
-				String author = rs.getString("ProductAuthor");
-				Integer price = rs.getInt("ProductPrice");
-				Integer stock = rs.getInt("ProductStock");
-				
-				detail = new Vector<>();
-				
-				detail.add(id+"");
-				detail.add(name);
-				detail.add(author);
-				detail.add(price+"");
-				detail.add(stock+"");
-				
-				data.add(detail);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		Vector<Model> productList = AdminController.getInstance().getAll();
+		
+		for (Model model : productList) {
+			AdminModel p = (AdminModel) model;
+			detail = new Vector<>();
+			detail.add(p.getProductId().toString());
+			detail.add(p.getProductName());
+			detail.add(p.getProductAuthor());
+			detail.add(p.getProductPrice().toString());
+			detail.add(p.getStock().toString());
+			
+			data.add(detail);
 		}
 		
-		DefaultTableModel dtm = new DefaultTableModel(data, header);
+		
+//		try {
+//			while(rs.next()) {
+//				Integer id = rs.getInt("ProductId");
+//				String name = rs.getString("ProductName");
+//				String author = rs.getString("ProductAuthor");
+//				Integer price = rs.getInt("ProductPrice");
+//				Integer stock = rs.getInt("ProductStock");
+//				
+//				detail = new Vector<>();
+//				
+//				
+//				detail.add(id+"");
+//				detail.add(name);
+//				detail.add(author);
+//				detail.add(price+"");
+//				detail.add(stock+"");
+//				
+//				data.add(detail);
+//			}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		DefaultTableModel dtm = new DefaultTableModel(data, header) {
+			
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		};
+		
+		
 		table.setModel(dtm);
 	}
 

@@ -14,7 +14,6 @@ public class AdminController extends Controller {
 	private static AdminController controller;
 	
 	
-	
 	public AdminController() {
 		ProductModel = new AdminModel();
 	}
