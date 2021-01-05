@@ -2,7 +2,7 @@ import connect.Connect;
 import core.view.View;
 import view.customer.AddToCartPage;
 import view.customer.LoginView;
-import view.customer.ProductPage;
+import view.admin.ProductPage;
 import view.customer.RegisterView;
 
 public class Main {
@@ -12,8 +12,9 @@ public class Main {
 		
 //		new LoginView().showForm();
 //		new RegisterView().showForm();
-		new ProductPage().showForm();
-		new AddToCartPage().showForm();
+//		new ProductPage().showForm();
+//		new AddToCartPage().showForm();
+		new LoginView().showForm();
 		
 		
 	}

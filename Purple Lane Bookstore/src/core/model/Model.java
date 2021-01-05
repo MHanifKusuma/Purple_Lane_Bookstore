@@ -12,9 +12,9 @@ public abstract class Model {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public abstract void insert();
-	public abstract void update();
-	public abstract void delete();
-	public abstract Vector<Model> getAll();
+//	public abstract void insert();
+//	public abstract void update();
+//	public abstract void delete();
+//	public abstract Vector<Model> getAll();
 
 }

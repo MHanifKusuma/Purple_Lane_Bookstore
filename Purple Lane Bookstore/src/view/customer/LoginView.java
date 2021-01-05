@@ -4,24 +4,30 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import controller.UserController;
 import core.view.View;
+import view.manager.HireStaffPage;
 
 public class LoginView extends View{
 	
 	JPanel top, mid, bot;
 	JTable table;
 	JScrollPane sp;
-	JLabel passLbl, passValue, nameLbl, nameValue;
+	JLabel passLbl, passValue, nameLbl, nameValue, pageHeader;
 	JTextField nameTxt, passTxt;
 	JButton login, register;
 	Vector<Vector<String>> data;
@@ -45,6 +51,8 @@ public class LoginView extends View{
 		nameTxt = new JTextField();
 		passTxt = new JTextField();
 		
+		pageHeader = new JLabel("Login");
+		pageHeader.setFont(new Font("Serif", Font.PLAIN, 18));
 		
 		login = new JButton("Login");
 		register = new JButton("Register");
@@ -52,6 +60,7 @@ public class LoginView extends View{
 
 	@Override
 	public void addComponent() {
+		top.add(pageHeader);
 		
 		mid.add(nameLbl);
 		mid.add(nameTxt);
@@ -69,7 +78,44 @@ public class LoginView extends View{
 
 	@Override
 	public void addListener() {
-		// TODO Auto-generated method stub
+		login.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String name = nameTxt.getText();
+				String pass = passTxt.getText();
+				
+				int AttemptLogin = UserController.getInstance().AuthenticateUser(name, pass);
+				
+				if(AttemptLogin == 401) {
+					JOptionPane.showMessageDialog(null, "Wrong password!");
+				}
+				else if (AttemptLogin == 402) {
+					JOptionPane.showMessageDialog(null, "User not found!");
+				}
+				else if (AttemptLogin == 201) {
+					new ProductPage().showForm();
+				}
+				else if (AttemptLogin == 202) {
+					new view.admin.ProductPage().showForm();
+				}
+				else if (AttemptLogin == 203) {
+					System.out.println("Welcome Promotion");
+				}
+				else if (AttemptLogin == 204) {
+					new HireStaffPage().showForm();
+				}
+			}
+		});
+		
+		register.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new RegisterView().showForm();
+				
+			}
+		});
 		
 	}
 
