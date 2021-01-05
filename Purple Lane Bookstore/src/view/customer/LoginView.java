@@ -35,6 +35,7 @@ public class LoginView extends View{
 	JButton login, register;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
+	
 
 	public LoginView() {
 		super();
@@ -100,16 +101,21 @@ public class LoginView extends View{
 					UserModel user = UserController.getInstance().setLoggedInUser(name);
 					
 					new ProductPage(user).showForm();
+					dispose();
 				}
 				else if (AttemptLogin == 202) {
 					new view.admin.AdminPage().showForm();
+					dispose();
 				}
 				else if (AttemptLogin == 203) {
 					System.out.println("Welcome Promotion");
+					dispose();
 				}
 				else if (AttemptLogin == 204) {
 					new HireStaffPage().showForm();
+					dispose();
 				}
+			
 			}
 		});
 		
@@ -117,6 +123,7 @@ public class LoginView extends View{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				dispose();
 				new RegisterView().showForm();
 				
 			}

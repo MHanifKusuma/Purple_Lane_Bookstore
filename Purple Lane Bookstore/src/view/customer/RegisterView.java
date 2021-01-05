@@ -101,6 +101,7 @@ public class RegisterView extends View{
 				else {
 					UserController.getInstance().insert(roleId, name, pass);
 					new LoginView().showForm();
+					dispose();
 				}
 				
 				
@@ -112,6 +113,7 @@ public class RegisterView extends View{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				dispose();
 				new LoginView().showForm();
 				
 			}

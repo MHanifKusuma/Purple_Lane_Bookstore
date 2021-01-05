@@ -28,7 +28,7 @@ public class HireStaffPage extends View{
 	JLabel passLbl, passValue, nameLbl, nameValue, roleLbl, pageHeader;
 	JTextField nameTxt, roleTxt;
 	JPasswordField passTxt;
-	JButton register;
+	JButton register, report;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
 
@@ -57,6 +57,7 @@ public class HireStaffPage extends View{
 		roleTxt = new JTextField();
 		
 		register = new JButton("Register");
+		report = new JButton("Report");
 		
 	}
 
@@ -72,7 +73,7 @@ public class HireStaffPage extends View{
 		mid.add(roleTxt);
 		
 		bot.add(register);
-	
+		bot.add(report);
 		
 		add(top, BorderLayout.NORTH);
 		add(mid, BorderLayout.CENTER);
@@ -122,6 +123,16 @@ public class HireStaffPage extends View{
 				}
 								
 			}});
+			
+			report.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					new FinancialReportPage().showForm();
+					dispose();
+				}
+			});
 			
 	}
 

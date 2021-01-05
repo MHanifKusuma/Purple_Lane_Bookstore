@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -118,10 +119,33 @@ public class AdminPage extends View {
 				// TODO Auto-generated method stub
 				String ProductName = nameTxt.getText();
 				String ProductAuthor = authorTxt.getText();
-				Integer ProductPrice = Integer.parseInt(priceTxt.getText());
-				Integer ProductStock = Integer.parseInt(stockTxt.getText());
-				AdminController.getInstance().insert(ProductName, ProductAuthor, ProductPrice, ProductStock);
-				loadData();
+				String ProductPrice = priceTxt.getText();
+				String ProductStock = stockTxt.getText();
+				
+				
+				
+				
+				int validate = AdminController.getInstance().insertvalidator(ProductName, ProductAuthor, ProductPrice, ProductStock);			
+				
+				if(validate == 1) {
+					JOptionPane.showMessageDialog(null, "All fields must be filled");
+				}else if(validate == 2) {
+					JOptionPane.showMessageDialog(null, "Price/Stock must be numeric");
+					
+				}
+				
+				Integer ProdPrice = Integer.parseInt(ProductPrice);
+				Integer ProdStock = Integer.parseInt(ProductStock);
+				
+				if(ProdPrice == 0 || ProdStock == 0) {
+					JOptionPane.showMessageDialog(null, "Price/Stock must be more than 0");
+				}else {
+					
+					AdminController.getInstance().insert(ProductName, ProductAuthor, ProdPrice, ProdStock);
+					loadData();
+				}
+				
+				
 			}
 		});
 		

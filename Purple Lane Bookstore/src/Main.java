@@ -13,7 +13,7 @@ public class Main {
 	
 	public Main() {
 		
-		new LoginView().showForm();
+//		new LoginView().showForm();
 //		new RegisterView().showForm();
 //		new ProductPage().showForm();
 //		new AddToCartPage().showForm();
@@ -21,6 +21,7 @@ public class Main {
 //		new HireStaffPage().showForm();
 //		new PromoPage().showForm();
 //		new AdminPage().showForm();
+		new HireStaffPage().showForm();
 	}
 
 	public static void main(String[] args) {

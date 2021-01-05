@@ -79,7 +79,7 @@ public class UserController extends Controller{
 	
 	public Integer AuthenticateUser(String username, String password) {
 		//Dalam method autentikasi ini, akun user akan dicari ke dalam database dan me-return error message jika terjadi masalah
-		//method ini juga akan memberikan otorisasi user yang berhasil login dengan mengecek role id nya dalam database.
+		//method ini juga akan memberikan authorization user yang berhasil login dengan mengecek role id nya dalam database.
 		
 		int error = 400; // me-return error jika validasi gagal
 		int role = 200; // me-return role jika validasi sukses
