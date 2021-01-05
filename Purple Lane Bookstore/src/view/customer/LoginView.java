@@ -23,6 +23,7 @@ import controller.UserController;
 import core.view.View;
 import model.UserModel;
 import view.manager.HireStaffPage;
+import view.promotion.PromoPage;
 
 public class LoginView extends View{
 	
@@ -105,7 +106,7 @@ public class LoginView extends View{
 					new view.admin.AdminPage().showForm();
 				}
 				else if (AttemptLogin == 203) {
-					System.out.println("Welcome Promotion");
+					new PromoPage().showForm();
 				}
 				else if (AttemptLogin == 204) {
 					new HireStaffPage().showForm();

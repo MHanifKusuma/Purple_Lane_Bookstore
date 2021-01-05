@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -109,6 +110,8 @@ public class ProductPage extends View {
 				Integer ProductQty = Integer.parseInt(quantityTxt.getText());
 				AddToCartController.getInstance().insert(user, ProductId, ProductQty);
 				loadData();
+				
+				JOptionPane.showMessageDialog(null, "Item added to cart successfully");
 			}
 		});
 		
@@ -144,6 +147,15 @@ public class ProductPage extends View {
 				int row = table.getSelectedRow();
 				idValue.setText(table.getValueAt(row, 0).toString());
 				nameValue.setText(table.getValueAt(row, 1).toString());
+			}
+		});
+		
+		viewCart.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new ViewCart(user).showForm();;
+				
 			}
 		});
 	}

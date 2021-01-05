@@ -13,12 +13,12 @@ public class Main {
 	
 	public Main() {
 		
-//		new LoginView().showForm();
+		new LoginView().showForm();
 //		new RegisterView().showForm();
 //		new ProductPage().showForm();
 //		new AddToCartPage().showForm();
 //		new AdminPage().showForm();
-		new HireStaffPage().showForm();
+//		new HireStaffPage().showForm();
 //		new PromoPage().showForm();
 //		new AdminPage().showForm();
 	}
