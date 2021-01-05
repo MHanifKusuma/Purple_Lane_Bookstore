@@ -21,6 +21,8 @@ public abstract class View extends JFrame{
 		setVisible(true);
 	}
 	
+	
+	
 	public abstract void initialize();
 	public abstract void addComponent();
 	public abstract void addListener();

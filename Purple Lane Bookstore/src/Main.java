@@ -1,9 +1,11 @@
 import connect.Connect;
 import core.view.View;
+import view.admin.AdminPage;
 import view.customer.AddToCartPage;
 import view.customer.LoginView;
 import view.customer.ProductPage;
 import view.customer.RegisterView;
+import view.manager.HireStaffPage;
 
 public class Main {
 	
@@ -12,9 +14,10 @@ public class Main {
 		
 //		new LoginView().showForm();
 //		new RegisterView().showForm();
-		new ProductPage().showForm();
-		new AddToCartPage().showForm();
-		
+//		new ProductPage().showForm();
+//		new AddToCartPage().showForm();
+//		new AdminPage().showForm();
+		new HireStaffPage().showForm();
 		
 	}
 
