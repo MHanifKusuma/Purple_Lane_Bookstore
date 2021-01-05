@@ -78,8 +78,8 @@ public class UserController extends Controller{
 	}
 	
 	public Integer AuthenticateUser(String username, String password) {
-		//Dalam method autentikasi ini, akun user akan dicari ke dalam database dan me-return error message jika terjadi masalah
-		//method ini juga akan memberikan otorisasi user yang berhasil login dengan mengecek role id nya dalam database.
+		// Dalam method autentikasi ini, akun user akan dicari ke dalam database dan me-return error message jika terjadi masalah
+		// method ini juga akan memberikan otorisasi user yang berhasil login dengan mengecek role id nya dalam database.
 		
 		int error = 400; // me-return error jika validasi gagal
 		int role = 200; // me-return role jika validasi sukses
@@ -96,17 +96,17 @@ public class UserController extends Controller{
 		try {
 			if(checkUser.next()) {
 				if(!checkUser.getString("Password").equals(password)) {
-					return error = 401; //error jika password yang dimasukkan salah
+					return error = 401; // error jika password yang dimasukkan salah
 				}
 				else {
 					if(checkUser.getInt("RoleId") == 1) {
-						return role = 201; //role untuk member
+						return role = 201; // role untuk member
 					}
 					else if (checkUser.getInt("RoleId") == 2) {
-						return role = 202; //role untuk admin
+						return role = 202; // role untuk admin
 					}
 					else if (checkUser.getInt("RoleId") == 3) {
-						return role = 203; //role untuk promotion
+						return role = 203; // role untuk promotion
 					}
 					else if (checkUser.getInt("RoleId") == 4) {
 						return role = 204; // role untuk manager
@@ -115,7 +115,7 @@ public class UserController extends Controller{
 			}
 			else
 			{
-				return error = 402; //error jika akun tidak ditemukan
+				return error = 402; // error jika akun tidak ditemukan
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -86,7 +86,6 @@ public class AddToCartPage extends View{
 
 	@Override
 	public void addListener() {
-		// TODO Auto-generated method stub
 		
 	}
 

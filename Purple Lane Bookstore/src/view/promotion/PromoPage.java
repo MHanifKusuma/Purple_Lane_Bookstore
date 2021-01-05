@@ -11,15 +11,20 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.mysql.jdbc.PreparedStatement.ParseInfo;
+
 import connect.Connect;
 import controller.AdminController;
+import controller.PromoController;
 import core.model.Model;
 import core.view.View;
 import model.AdminModel;
+import model.PromoModel;
 
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -37,9 +42,9 @@ public class PromoPage extends View {
 	JPanel top, top2, mid, bot;
 	JTable table;
 	JScrollPane sp;
-	JLabel idLbl, idValue, nameLbl, authorLbl, priceLbl, stockLbl, searchLbl;
-	JTextField nameTxt, authorTxt, priceTxt, stockTxt, searchTxt;
-	JButton insert, update, delete, search;
+	JLabel idLbl, idValue, codeLbl, discLbl, noteLbl;
+	JTextField codeTxt, discTxt, noteTxt;
+	JButton insert, update, delete;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
 
@@ -53,55 +58,41 @@ public class PromoPage extends View {
 	public void initialize() {
 		top = new JPanel();
 		top2 = new JPanel();
-		mid = new JPanel(new GridLayout(5,2));
+		mid = new JPanel(new GridLayout(4,2));
 		bot = new JPanel();
 		table = new JTable();
 		sp = new JScrollPane(table);
-		idLbl = new JLabel("Product ID: ");
-		nameLbl = new JLabel("Product Name: ");
-		authorLbl = new JLabel("Product Author:");
-		priceLbl = new JLabel("Product Price: ");
-		stockLbl = new JLabel("Product Stock:");
+		idLbl = new JLabel("Promo ID: ");
+		codeLbl = new JLabel("Promo Code: ");
+		discLbl = new JLabel("Promo Discount: ");
+		noteLbl = new JLabel("Promo Note: ");
+
 		idValue = new JLabel("-");
-		nameTxt = new JTextField();
-		authorTxt = new JTextField();
-		priceTxt = new JTextField();
-		stockTxt = new JTextField();
-		
-		searchLbl = new JLabel("Search Product ID: ");
-		searchTxt = new JTextField();
+		codeTxt = new JTextField();
+		discTxt = new JTextField();
+		noteTxt = new JTextField();
 		
 		insert = new JButton("Insert") ;
 		update = new JButton("Update");
 		delete = new JButton("Delete");	
-		search = new JButton("Search");
 		
 		sp.setPreferredSize(new Dimension(550, 300));
-		searchTxt.setPreferredSize(new Dimension(200, 30));
 		
 	}
 
 	@Override
 	public void addComponent() {
 		Connect con = new Connect();
-		
-		//	loadData(con.executeQuery("SELECT * FROM products"));
-			
-			top.add(searchLbl);
-			top.add(searchTxt);
-			top.add(search);
 			top.add(sp);
 			
 			mid.add(idLbl);
 			mid.add(idValue);
-			mid.add(nameLbl);
-			mid.add(nameTxt);
-			mid.add(authorLbl);
-			mid.add(authorTxt);
-			mid.add(priceLbl);
-			mid.add(priceTxt);
-			mid.add(stockLbl);
-			mid.add(stockTxt);
+			mid.add(codeLbl);
+			mid.add(codeTxt);
+			mid.add(discLbl);
+			mid.add(discTxt);
+			mid.add(noteLbl);
+			mid.add(noteTxt);
 			
 			bot.add(insert);
 			bot.add(update);
@@ -124,11 +115,36 @@ public class PromoPage extends View {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
-						String ProductName = nameTxt.getText();
-						String ProductAuthor = authorTxt.getText();
-						Integer ProductPrice = Integer.parseInt(priceTxt.getText());
-						Integer ProductStock = Integer.parseInt(stockTxt.getText());
-						AdminController.getInstance().insert(ProductName, ProductAuthor, ProductPrice, ProductStock);
+						String promoCode = "";
+						String promoDiscount = "";
+						String promoNote = "";
+					
+						promoCode = codeTxt.getText();
+						promoDiscount = discTxt.getText();
+						promoNote = noteTxt.getText();
+						
+						int attemptInsert = PromoController.getInstance().attemptInsert(promoCode, promoDiscount, promoNote, 0);
+						
+						if (attemptInsert == -1) {
+							JOptionPane.showMessageDialog(null, "All fields must be filled");
+						}
+						else {
+							if(attemptInsert == 1) {
+								JOptionPane.showMessageDialog(null, "Promo code already exists");
+							}
+							else if(attemptInsert == 2) {
+								JOptionPane.showMessageDialog(null, "Promo discount must be numeric");
+							}
+							else if(attemptInsert == 3) {
+								JOptionPane.showMessageDialog(null, "Promo discount must be more than 15000");
+							}
+							else {
+								Integer disc = Integer.parseInt(promoDiscount);
+								PromoController.getInstance().insert(promoCode, disc, promoNote);
+							}
+						}
+						
+	
 						loadData();
 					}
 				});
@@ -164,10 +180,9 @@ public class PromoPage extends View {
 						// TODO Auto-generated method stub
 						int row = table.getSelectedRow();
 						idValue.setText(table.getValueAt(row, 0).toString());
-						nameTxt.setText(table.getValueAt(row, 1).toString());
-						authorTxt.setText(table.getValueAt(row, 2).toString());
-						priceTxt.setText(table.getValueAt(row, 3).toString());
-						stockTxt.setText(table.getValueAt(row, 4).toString());
+						codeTxt.setText(table.getValueAt(row, 1).toString());
+						discTxt.setText(table.getValueAt(row, 2).toString());
+						noteTxt.setText(table.getValueAt(row, 3).toString());
 					}
 				});
 				
@@ -176,12 +191,36 @@ public class PromoPage extends View {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
-						Integer ProductId = Integer.parseInt(idValue.getText());
-						String ProductName = nameTxt.getText();
-						String ProductAuthor = authorTxt.getText();
-						Integer ProductPrice = Integer.parseInt(priceTxt.getText());
-						Integer ProductStock = Integer.parseInt(stockTxt.getText());
-						AdminController.getInstance().update(ProductName, ProductAuthor, ProductPrice, ProductStock, ProductId);
+						
+						String promoCode = "";
+						String promoDiscount = "";
+						String promoNote = "";
+						
+						Integer PromoId = Integer.parseInt(idValue.getText());
+						promoCode = codeTxt.getText();
+						promoDiscount = discTxt.getText();
+						promoNote = noteTxt.getText();
+						
+						int attemptInsert = PromoController.getInstance().attemptInsert(promoCode, promoDiscount, promoNote, PromoId);
+						
+						if (attemptInsert == -1) {
+							JOptionPane.showMessageDialog(null, "All fields must be filled");
+						}
+						else {
+							if(attemptInsert == 2) {
+								JOptionPane.showMessageDialog(null, "Promo code already exists");
+							}
+							else if(attemptInsert == 3) {
+								JOptionPane.showMessageDialog(null, "Promo discount must be numeric");
+							}
+							else if(attemptInsert == 4) {
+								JOptionPane.showMessageDialog(null, "Promo discount must be more than 15000");
+							}
+							else {
+								Integer disc = Integer.parseInt(promoDiscount);
+								PromoController.getInstance().update(promoCode, disc, promoNote, PromoId);
+							}
+						}
 						loadData();
 					}
 				});
@@ -191,9 +230,9 @@ public class PromoPage extends View {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
-						Integer ProductId = Integer.parseInt(idValue.getText());
+						Integer promoId = Integer.parseInt(idValue.getText());
 						
-						AdminController.getInstance().delete(ProductId);
+						PromoController.getInstance().delete(promoId);
 						loadData();
 					}
 				});
@@ -204,23 +243,22 @@ public class PromoPage extends View {
 		header = new Vector<>();
 		data = new Vector<>();
 		
-		header.add("Product ID");
-		header.add("Product Name");
-		header.add("Product Author");
-		header.add("Product Price");
-		header.add("Product Stock");
+		header.add("Promo ID");
+		header.add("Promo Code");
+		header.add("Promo Discount");
+		header.add("Promo Note");
 		
 		
-		Vector<Model> productList = AdminController.getInstance().getAll();
+		Vector<Model> promoList = PromoController.getInstance().getAll();
 		
-		for (Model model : productList) {
-			AdminModel p = (AdminModel) model;
+		for (Model model : promoList) {
+			PromoModel p = (PromoModel) model;
+			
 			detail = new Vector<>();
-			detail.add(p.getProductId().toString());
-			detail.add(p.getProductName());
-			detail.add(p.getProductAuthor());
-			detail.add(p.getProductPrice().toString());
-			detail.add(p.getStock().toString());
+			detail.add(p.getPromoId().toString());
+			detail.add(p.getPromoCode());
+			detail.add(p.getPromoDisc().toString());
+			detail.add(p.getPromoNote());
 			
 			data.add(detail);
 		}
