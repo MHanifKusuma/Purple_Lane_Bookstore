@@ -18,8 +18,8 @@ public class Main {
 //		new ProductPage().showForm();
 //		new AddToCartPage().showForm();
 //		new AdminPage().showForm();
-//		new HireStaffPage().showForm();
-		new PromoPage().showForm();
+		new HireStaffPage().showForm();
+//		new PromoPage().showForm();
 //		new AdminPage().showForm();
 	}
 

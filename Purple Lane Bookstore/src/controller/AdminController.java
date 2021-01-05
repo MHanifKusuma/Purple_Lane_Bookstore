@@ -14,6 +14,7 @@ public class AdminController extends Controller {
 	private static AdminController controller;
 	
 	
+	
 	public AdminController() {
 		ProductModel = new AdminModel();
 	}
@@ -40,6 +41,29 @@ public class AdminController extends Controller {
 		product.insert();
 	}
 
+	public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+	
+	public Integer insertvalidator(String name, String author, String price, String stock) {
+		int error = 0;
+		
+		if (name.equals("") || author.equals("") || price.equals("") || stock.equals("")) {
+			return error = 1;
+		}else if ((!isNumeric(price)) || (!isNumeric(stock))) {
+			return error = 2;
+		}
+		return error;
+	}
+	
 	
 	public void update(String name, String author, Integer price, Integer stock, Integer Id) {
 		// TODO Auto-generated method stub

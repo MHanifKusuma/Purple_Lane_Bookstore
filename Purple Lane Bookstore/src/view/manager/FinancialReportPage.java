@@ -1,59 +1,72 @@
 package view.manager;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import core.view.View;
 
 public class FinancialReportPage extends View {
 
-	private JFrame frame;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FinancialReportPage window = new FinancialReportPage();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JPanel top, mid, bot;
+	private JButton register;
 
-	/**
-	 * Create the application.
-	 */
+	
+
+
 	public FinancialReportPage() {
-		initialize();
+		super();
+		this.height = 200;
+		this.width = 350;
+		
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 
 	@Override
 	public void initialize() {
 		// TODO Auto-generated method stub
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		top = new JPanel();
+		mid = new JPanel();
+		bot = new JPanel();
+		
+		register = new JButton("Register");
+
+		
 	}
 
 	@Override
 	public void addComponent() {
 		// TODO Auto-generated method stub
+		bot.add(register);
+	
+		
+		add(top, BorderLayout.NORTH);
+		add(mid, BorderLayout.CENTER);
+		add(bot, BorderLayout.SOUTH);
+		
 		
 	}
 
 	@Override
 	public void addListener() {
 		// TODO Auto-generated method stub
+		
+		register.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				new HireStaffPage().showForm();
+				dispose();
+			}
+		});
+		
 		
 	}
 
