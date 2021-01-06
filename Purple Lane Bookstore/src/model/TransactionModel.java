@@ -157,4 +157,40 @@ public class TransactionModel extends Model {
 		return null;
 	}
 
+	public Vector<Model> getAllUserTransaction(UserModel user) {
+		Vector<Model> data = new Vector<>();
+		String query = "SELECT * from transactions WHERE UserId = ?";
+		ResultSet rs = null;
+		
+		PreparedStatement pQuery = con.prepareStatement(query);
+		
+		try {
+			pQuery.setInt(1, user.getUserId());
+			rs = pQuery.executeQuery();
+			
+			while(rs.next()){
+				Integer transactionId = rs.getInt("TransactionId");
+				Timestamp transactionDate = rs.getTimestamp("TransactionDate");
+				String paymentType = rs.getString("PaymentType");
+				String cardNumber = rs.getString("CardNumber");
+				Integer promoId = rs.getInt("PromoId");
+				
+				TransactionModel transHistory = new TransactionModel();
+				transHistory.setTransactionId(transactionId);
+				transHistory.setTransactionDate(transactionDate);
+				transHistory.setPaymentType(paymentType);
+				transHistory.setCardNumber(cardNumber);
+				transHistory.setPromoId(promoId);
+				
+				data.add(transHistory);
+				
+			}
+			return data;
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 }

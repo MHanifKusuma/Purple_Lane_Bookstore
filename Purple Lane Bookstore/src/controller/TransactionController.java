@@ -243,4 +243,13 @@ public class TransactionController extends Controller {
 		return null;
 	}
 
+	public Vector<Model> getAll(UserModel user){
+		return transactions.getAllUserTransaction(user);
+	}
+	
+	public Vector<Model> getDetailTransaction(Integer transactionId, UserModel user) {
+		DetailTransactionModel dtm = new DetailTransactionModel();
+		dtm.setTransactionId(transactionId);
+		return dtm.getAll(transactionId, user);
+	}
 }

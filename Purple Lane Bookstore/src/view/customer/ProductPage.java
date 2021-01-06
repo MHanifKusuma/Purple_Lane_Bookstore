@@ -35,7 +35,7 @@ public class ProductPage extends View {
 	JScrollPane sp;
 	JLabel searchLbl, idLbl, nameLbl, quantityLbl, idValue, nameValue;
 	JTextField searchTxt, quantityTxt;
-	JButton search, addToCart, viewCart;
+	JButton search, addToCart, viewCart, viewTransactionHistory;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
 	UserModel user;
@@ -66,9 +66,10 @@ public class ProductPage extends View {
 		nameValue = new JLabel("-");
 		search = new JButton("Search");
 		addToCart = new JButton("Add to cart");
-		viewCart = new JButton("View cart");
+		viewCart = new JButton("Cart");
+		viewTransactionHistory = new JButton("Transaction History");
 		sp.setPreferredSize(new Dimension(550, 300));
-		searchTxt.setPreferredSize(new Dimension(200, 30));
+		searchTxt.setPreferredSize(new Dimension(100, 30));
 	}
 
 	@Override
@@ -81,6 +82,7 @@ public class ProductPage extends View {
 		top.add(searchTxt);
 		top.add(search);
 		top.add(viewCart);
+		top.add(viewTransactionHistory);
 		top.add(sp);
 		
 		mid.add(idLbl);
@@ -180,7 +182,18 @@ public class ProductPage extends View {
 				
 			}
 		});
+		
+		viewTransactionHistory.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new TransactionHistoryPage(user).showForm();
+				
+			}
+		});
 	}
+	
+	
 	
 	private void loadData() {
 		header = new Vector<>();
