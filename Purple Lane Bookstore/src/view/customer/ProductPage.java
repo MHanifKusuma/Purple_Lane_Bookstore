@@ -106,12 +106,34 @@ public class ProductPage extends View {
 				// TODO Auto-generated method stub
 				UserModel um = new UserModel();
 				AddToCartController cont = new AddToCartController();
+				
+				String ProductQty = "";
 				Integer ProductId = Integer.parseInt(idValue.getText());
-				Integer ProductQty = Integer.parseInt(quantityTxt.getText());
-				AddToCartController.getInstance().insert(user, ProductId, ProductQty);
+				ProductQty = quantityTxt.getText();
+				
+				Integer attemptInsert = AddToCartController.getInstance().attemptInsert(ProductId, ProductQty);
+				
+				if(attemptInsert == 1) {
+					JOptionPane.showMessageDialog(null, "All fields must be filled");
+				}
+				else {
+					if(attemptInsert == 2) {
+						JOptionPane.showMessageDialog(null, "Quantity must be numeric");
+					}
+					else if (attemptInsert == 3) {
+						JOptionPane.showMessageDialog(null, "Book stock is not enough");
+					}
+					else {
+						Integer qty = Integer.parseInt(ProductQty);
+						AddToCartController.getInstance().insert(user, ProductId, qty);
+						JOptionPane.showMessageDialog(null, "Item added to cart successfully");
+					}
+				}
+				
+				
 				loadData();
 				
-				JOptionPane.showMessageDialog(null, "Item added to cart successfully");
+				
 			}
 		});
 		
@@ -184,31 +206,6 @@ public class ProductPage extends View {
 			
 			data.add(detail);
 		}
-		
-		
-//		try {
-//			while(rs.next()) {
-//				Integer id = rs.getInt("ProductId");
-//				String name = rs.getString("ProductName");
-//				String author = rs.getString("ProductAuthor");
-//				Integer price = rs.getInt("ProductPrice");
-//				Integer stock = rs.getInt("ProductStock");
-//				
-//				detail = new Vector<>();
-//				
-//				
-//				detail.add(id+"");
-//				detail.add(name);
-//				detail.add(author);
-//				detail.add(price+"");
-//				detail.add(stock+"");
-//				
-//				data.add(detail);
-//			}
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		
 		DefaultTableModel dtm = new DefaultTableModel(data, header) {
 			

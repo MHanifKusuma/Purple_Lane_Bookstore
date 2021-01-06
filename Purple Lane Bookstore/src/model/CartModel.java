@@ -53,6 +53,17 @@ public class CartModel extends Model{
 	@Override
 	public void delete() {
 		// TODO Auto-generated method stub
+		String query = String.format("Delete from %s where ProductId = ? AND UserId = ? ", tablename);
+		java.sql.PreparedStatement ps = con.prepareStatement(query);
+	
+		try {
+			ps.setInt(1, productId);
+			ps.setInt(2, userId);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

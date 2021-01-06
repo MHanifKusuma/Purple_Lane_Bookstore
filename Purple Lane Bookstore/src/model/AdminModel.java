@@ -1,10 +1,9 @@
 package model;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
-
-import com.mysql.jdbc.PreparedStatement;
 
 import core.model.Model;
 
@@ -155,4 +154,22 @@ public class AdminModel extends Model{
 		return null;
 	}
 
+	public ResultSet checkProduct(Integer productId) {
+		ResultSet rs = null;
+		String query = "SELECT * FROM products WHERE ProductId LIKE ?";
+		
+		PreparedStatement pQuery = con.prepareStatement(query);
+		
+		try {
+			pQuery.setInt(1, productId);
+			rs = pQuery.executeQuery();
+			
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 }

@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.plaf.basic.BasicTreeUI.CellEditorHandler;
 import javax.swing.table.DefaultTableModel;
 
 import connect.Connect;
@@ -36,16 +38,16 @@ public class ViewCart extends View{
 	JLabel searchLbl, idLbl, nameLbl, quantityLbl, idValue, nameValue;
 	JTextField searchTxt, quantityTxt;
 	JButton viewProduct, checkout;
-	Vector<Vector<String>> data;
-	Vector<String> detail, header;
-	Integer userId = 0;
+	Vector<Vector<Object>> data;
+	Vector<Object> header;
+	Vector<Object> detail;
 	UserModel user;
 	
 	public ViewCart(UserModel user) {
 		super();
-		this.userId = user.getUserId();
 		this.user = user;
 		addComponent(user);
+		addListener(user);
 		this.height = 600;
 		this.width = 600;
 		
@@ -56,6 +58,8 @@ public class ViewCart extends View{
 		top = new JPanel();
 		bot = new JPanel();
 		table = new JTable();
+		table.setRowSelectionAllowed(true);
+		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		sp = new JScrollPane(table);
 
 		checkout = new JButton("Chekout");
@@ -70,7 +74,6 @@ public class ViewCart extends View{
 	
 	public void addComponent(UserModel user) {
 				loadData(user);
-				System.out.println("passed user id: " + userId);
 				
 				top.add(viewProduct);
 				top.add(sp);
@@ -82,21 +85,39 @@ public class ViewCart extends View{
 				
 			}
 
-	@Override
-	public void addListener() {
-//		checkout.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// TODO Auto-generated method stub
-//				UserModel um = new UserModel();
-//				AddToCartController cont = new AddToCartController();
-//				Integer ProductId = Integer.parseInt(idValue.getText());
-//				Integer ProductQty = Integer.parseInt(quantityTxt.getText());
-//				AddToCartController.getInstance().insert(user, ProductId, ProductQty);
-//				loadData();
-//			}
-//		});
+	public void addListener(UserModel user) {
+		Vector<CartModel> checkoutItems = new Vector<>();
+		
+		checkout.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+				for(int i=0; i<table.getRowCount(); i++) {
+					Boolean checked = Boolean.valueOf(table.getValueAt(i, 0).toString());
+					
+					if(checked) {
+						Integer productId = Integer.parseInt(table.getValueAt(i, 1).toString());
+						String productName = table.getValueAt(i, 2).toString();
+						Integer productQty = Integer.parseInt(table.getValueAt(i, 3).toString());
+						
+						CartModel items = new CartModel();
+						items.setProductId(productId);
+						items.setQuantity(productQty);
+						items.setUserId(user.getUserId());
+						items.setProductName(productName);
+						
+						checkoutItems.add(items);
+					}
+					
+					
+				}
+				new PaymentPage(checkoutItems, user).showForm();
+				
+			}
+			
+		});
 		
 		table.addMouseListener(new MouseListener() {
 			
@@ -127,9 +148,7 @@ public class ViewCart extends View{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				int row = table.getSelectedRow();
-				idValue.setText(table.getValueAt(row, 0).toString());
-				nameValue.setText(table.getValueAt(row, 1).toString());
+				
 			}
 		});
 		
@@ -145,42 +164,54 @@ public class ViewCart extends View{
 	}
 	
 	private void loadData(UserModel user) {
-		System.out.println(user.getUserId());
-		System.out.println(user.getUsername());
-		System.out.println(userId);
-		header = new Vector<>();
-		data = new Vector<>();
 		
-		header.add("Product ID");
-		header.add("Product Name");
-		header.add("Quantity");
-		
-		Vector<Model> cartList = AddToCartController.getInstance().getAll(user);
-		
-		for (Model model : cartList) {
-			CartModel p = (CartModel) model;
+		DefaultTableModel dtm = new DefaultTableModel() {
 			
-			detail = new Vector<>();
-			
-			detail.add(p.getProductId().toString());
-			detail.add(p.getProductName());
-			detail.add(p.getQuantity().toString());
-			
-			data.add(detail);
-		}
-		
-		DefaultTableModel dtm = new DefaultTableModel(data, header) {
-			
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				// TODO Auto-generated method stub
-				return false;
+			public Class<?> getColumnClass(int column) {
+				switch (column) {
+				case 0:
+					return Boolean.class;
+				case 1:
+					return String.class;
+				case 2:
+					return String.class;
+				case 3:
+					return String.class;
+
+				default:
+					return String.class;
+				}
 			}
 			
 		};
 		
 		
 		table.setModel(dtm);
+		
+		dtm.addColumn("Action");
+		dtm.addColumn("Product ID");
+		dtm.addColumn("Product Name");
+		dtm.addColumn("Quantity");	
+		
+		Vector<Model> cartList = AddToCartController.getInstance().getAll(user);
+		
+		for(int i=0;i < cartList.size();i++)
+	    {
+			CartModel items = (CartModel) cartList.get(i);
+			
+			dtm.addRow(new Object[0]);
+			dtm.setValueAt(false,i,0);
+			dtm.setValueAt(items.getProductId(), i, 1);
+			dtm.setValueAt(items.getProductName(), i, 2);
+			dtm.setValueAt(items.getQuantity(), i, 3);
+	    }
+												
+	}
+
+	@Override
+	public void addListener() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
