@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -11,7 +12,16 @@ public class CartModel extends Model{
 	private Integer userId;
 	private Integer productId;
 	private Integer quantity;
+	private String productName;
 	
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
 	public CartModel() {
 		// TODO Auto-generated constructor stub
 		this.tablename = "carts";
@@ -46,23 +56,37 @@ public class CartModel extends Model{
 		
 	}
 
-	@Override
-	public Vector<Model> getAll() {
+	
+	public Vector<Model> getAll(UserModel user) {
 		// TODO Auto-generated method stub
 		Vector<Model> data = new Vector<>();
-		String query = String.format("select * from %s", tablename);
-		ResultSet rs = con.executeQuery(query);
+		String query = String.format("select "
+										+ "%s.ProductId, products.ProductName, %s.ProductQuantity"
+										+ " from %s join `products` on `%s`.`ProductId` = `products`.`ProductId`"
+										+ " where %s.UserId = ?", tablename, tablename, tablename, tablename, tablename);
+		
+		PreparedStatement pQuery = con.prepareStatement(query);
+		ResultSet rs = null;
+		
+		try {
+			pQuery.setInt(1, user.getUserId());
+			
+			rs = pQuery.executeQuery();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try {
 			
 			while(rs.next()){
-				Integer userId = rs.getInt("UserId");
 				Integer productId = rs.getInt("ProductId");
+				String productName = rs.getString("ProductName");
 				Integer productQty = rs.getInt("ProductQuantity");
 				
 				CartModel cart = new CartModel();
-				cart.setProductId(userId);
 				cart.setProductId(productId);
+				cart.setProductName(productName);
 				cart.setQuantity(productQty);
 				
 				data.add(cart);
@@ -99,6 +123,12 @@ public class CartModel extends Model{
 
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	@Override
+	public Vector<Model> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

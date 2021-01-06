@@ -86,13 +86,6 @@ public class UserController extends Controller{
 		
 		ResultSet checkUser = user.checkUser(username);
 		
-//		try {
-//			
-//		} catch (SQLException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-		
 		try {
 			if(checkUser.next()) {
 				if(!checkUser.getString("Password").equals(password)) {

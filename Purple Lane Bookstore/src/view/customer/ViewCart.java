@@ -25,6 +25,7 @@ import controller.AdminController;
 import core.model.Model;
 import core.view.View;
 import model.AdminModel;
+import model.CartModel;
 import model.UserModel;
 
 public class ViewCart extends View{
@@ -37,15 +38,18 @@ public class ViewCart extends View{
 	JButton viewProduct, checkout;
 	Vector<Vector<String>> data;
 	Vector<String> detail, header;
+	Integer userId = 0;
 	UserModel user;
 	
 	public ViewCart(UserModel user) {
 		super();
+		this.userId = user.getUserId();
+		this.user = user;
+		addComponent(user);
 		this.height = 600;
 		this.width = 600;
-		this.user = user;
+		
 	}
-
 
 	@Override
 	public void initialize() {
@@ -61,19 +65,22 @@ public class ViewCart extends View{
 
 	@Override
 	public void addComponent() {
-Connect con = new Connect();
-		
-		loadData();
-		
-		top.add(viewProduct);
-		top.add(sp);
-
-		bot.add(checkout);	
-		
-		add(top, BorderLayout.NORTH);
-		add(bot, BorderLayout.SOUTH);
 		
 	}
+	
+	public void addComponent(UserModel user) {
+				loadData(user);
+				System.out.println("passed user id: " + userId);
+				
+				top.add(viewProduct);
+				top.add(sp);
+
+				bot.add(checkout);	
+				
+				add(top, BorderLayout.NORTH);
+				add(bot, BorderLayout.SOUTH);
+				
+			}
 
 	@Override
 	public void addListener() {
@@ -137,55 +144,30 @@ Connect con = new Connect();
 		
 	}
 	
-	private void loadData() {
+	private void loadData(UserModel user) {
+		System.out.println(user.getUserId());
+		System.out.println(user.getUsername());
+		System.out.println(userId);
 		header = new Vector<>();
 		data = new Vector<>();
 		
 		header.add("Product ID");
 		header.add("Product Name");
-		header.add("Product Author");
-		header.add("Product Price");
-		header.add("Product Stock");
+		header.add("Quantity");
 		
+		Vector<Model> cartList = AddToCartController.getInstance().getAll(user);
 		
-		Vector<Model> productList = AdminController.getInstance().getAll();
-		
-		for (Model model : productList) {
-			AdminModel p = (AdminModel) model;
+		for (Model model : cartList) {
+			CartModel p = (CartModel) model;
+			
 			detail = new Vector<>();
+			
 			detail.add(p.getProductId().toString());
 			detail.add(p.getProductName());
-			detail.add(p.getProductAuthor());
-			detail.add(p.getProductPrice().toString());
-			detail.add(p.getStock().toString());
+			detail.add(p.getQuantity().toString());
 			
 			data.add(detail);
 		}
-		
-		
-//		try {
-//			while(rs.next()) {
-//				Integer id = rs.getInt("ProductId");
-//				String name = rs.getString("ProductName");
-//				String author = rs.getString("ProductAuthor");
-//				Integer price = rs.getInt("ProductPrice");
-//				Integer stock = rs.getInt("ProductStock");
-//				
-//				detail = new Vector<>();
-//				
-//				
-//				detail.add(id+"");
-//				detail.add(name);
-//				detail.add(author);
-//				detail.add(price+"");
-//				detail.add(stock+"");
-//				
-//				data.add(detail);
-//			}
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		
 		DefaultTableModel dtm = new DefaultTableModel(data, header) {
 			

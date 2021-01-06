@@ -48,10 +48,10 @@ public class AddToCartController extends Controller{
 		
 	}
 
-	@Override
-	public Vector<Model> getAll() {
+	
+	public Vector<Model> getAll(UserModel userId) {
 		// TODO Auto-generated method stub
-		return CartModel.getAll();
+		return CartModel.getAll(userId);
 	}
 
 	@Override
@@ -62,6 +62,12 @@ public class AddToCartController extends Controller{
 	
 	public void getUserId (UserModel user) {
 		user.getUserId();
+	}
+
+	@Override
+	public Vector<Model> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
