@@ -1,10 +1,13 @@
 import connect.Connect;
 import core.view.View;
 import view.admin.AdminPage;
+import view.customer.AddToCartPage;
 import view.customer.LoginView;
 import view.customer.ProductPage;
 import view.customer.RegisterView;
+import view.manager.FinancialReportPage;
 import view.manager.HireStaffPage;
+import view.manager.ReportDetailPage;
 import view.promotion.PromoPage;
 
 public class Main {
@@ -20,6 +23,8 @@ public class Main {
 //		new HireStaffPage().showForm();
 //		new PromoPage().showForm();
 //		new AdminPage().showForm();
+//		new FinancialReportPage().showForm();
+//		new ReportDetailPage().showForm();
 	}
 
 	public static void main(String[] args) {

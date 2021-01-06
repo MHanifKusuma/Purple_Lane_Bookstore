@@ -50,8 +50,8 @@ public class PromoPage extends View {
 
 	public PromoPage() {
 		super();
-		this.height = 800;
-		this.width = 700;
+		this.height = 600;
+		this.width = 600;
 	}
 
 	@Override
