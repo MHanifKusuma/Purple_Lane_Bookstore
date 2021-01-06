@@ -1,18 +1,41 @@
 package model;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
 import core.model.Model;
 
 public class DetailTransactionModel extends Model {
-	private String tablename;
+	private String tablename, productName;
 	private Integer transactionId, productId, productQty;
 	
 	public DetailTransactionModel() {
 		this.tablename = "detail_transactions";
 	}
+	
+	public String getTablename() {
+		return tablename;
+	}
+
+	public void setTablename(String tablename) {
+		this.tablename = tablename;
+	}
+
+
+
+	public String getProductName() {
+		return productName;
+	}
+
+
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+
 
 	public Integer getTransactionId() {
 		return transactionId;
@@ -73,4 +96,40 @@ public class DetailTransactionModel extends Model {
 		return null;
 	}
 
+	public Vector<Model> getAll(Integer transactionId, UserModel user) {
+		Vector<Model> data = new Vector<>();
+		String query = String.format("SELECT detail_transactions.TransactionId, detail_transactions.ProductId, products.ProductName, detail_transactions.ProductQuantity" +
+				"FROM transactions JOIN detail_transactions ON transactions.TransactionId = detail_transactions.TransactionId JOIN products ON detail_transactions.ProductId = products.ProductId" + 
+				"WHERE transactions.UserId = %d AND detail_transactions.TransactionId = %d", user.getUserId(), transactionId);
+
+		ResultSet rs = con.executeQuery(query);
+		
+		try {
+			
+			while(rs.next()){
+				
+				Integer transactionnId = rs.getInt("transactionId");
+				Integer productId = rs.getInt("ProductId");
+				String productName = rs.getString("ProductName");
+				Integer qty = rs.getInt("ProductQuantity");
+		
+				
+				DetailTransactionModel dtm  = new DetailTransactionModel();
+				dtm.setTransactionId(transactionnId);
+				dtm.setProductId(productId);
+				dtm.setProductName(productName);
+				dtm.setProductQty(qty);
+				
+				data.add(dtm);
+				
+			}
+			
+			return data;
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+	}
 }
